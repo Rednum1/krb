@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "node-addon-api": "^8.0.0",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.38"
+  },
+  "scripts": {
+    "start": "cd backend && npm start"
+  }
+}
