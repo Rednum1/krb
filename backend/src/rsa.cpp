@@ -1,9 +1,48 @@
 #include <napi.h>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
-#include <openssl/evp.h>
+#include <openssl/err.h>
+#include <openssl/bio.h>
+#include <openssl/buffer.h>
 #include <string>
 #include <vector>
+
+std::string base64Encode(const unsigned char* buffer, size_t length) {
+    BIO *bio, *b64;
+    BUF_MEM *bufferPtr;
+
+    b64 = BIO_new(BIO_f_base64());
+    bio = BIO_new(BIO_s_mem());
+    bio = BIO_push(b64, bio);
+
+    BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
+    BIO_write(bio, buffer, length);
+    BIO_flush(bio);
+    BIO_get_mem_ptr(bio, &bufferPtr);
+
+    std::string encodedData(bufferPtr->data, bufferPtr->length);
+    BIO_free_all(bio);
+
+    return encodedData;
+}
+
+std::vector<unsigned char> base64Decode(const std::string &base64String) {
+    BIO *bio, *b64;
+
+    int decodeLen = static_cast<int>(base64String.size());
+    std::vector<unsigned char> buffer(decodeLen);
+
+    bio = BIO_new_mem_buf(base64String.c_str(), -1);
+    b64 = BIO_new(BIO_f_base64());
+    bio = BIO_push(b64, bio);
+
+    BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
+    decodeLen = BIO_read(bio, buffer.data(), static_cast<int>(base64String.size()));
+    buffer.resize(decodeLen);
+    BIO_free_all(bio);
+
+    return buffer;
+}
 
 class RSAWrapper : public Napi::ObjectWrap<RSAWrapper> {
 public:
@@ -16,117 +55,99 @@ public:
 
         constructor = Napi::Persistent(func);
         constructor.SuppressDestruct();
+
         exports.Set("RSAWrapper", func);
         return exports;
     }
 
     RSAWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<RSAWrapper>(info) {
-        Napi::Env env = info.Env();
-        Napi::HandleScope scope(env);
+        rsa = RSA_new();
     }
 
-private:
-    static Napi::FunctionReference constructor;
+    ~RSAWrapper() {
+        RSA_free(rsa);
+    }
 
     Napi::Value GenerateKeys(const Napi::CallbackInfo& info) {
         Napi::Env env = info.Env();
-        Napi::HandleScope scope(env);
 
-        int bits = 2048;
-        unsigned long e = RSA_F4;
+        BIGNUM* e = BN_new();
+        BN_set_word(e, RSA_F4);
 
-        EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);
-        EVP_PKEY_keygen_init(ctx);
-        EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, bits);
+        RSA_generate_key_ex(rsa, 2048, e, NULL);
+        BN_free(e);
 
-        EVP_PKEY *pkey = NULL;
-        EVP_PKEY_keygen(ctx, &pkey);
-        EVP_PKEY_CTX_free(ctx);
+        BIO* privBio = BIO_new(BIO_s_mem());
+        BIO* pubBio = BIO_new(BIO_s_mem());
 
-        BIO *pri = BIO_new(BIO_s_mem());
-        PEM_write_bio_PrivateKey(pri, pkey, NULL, NULL, 0, NULL, NULL);
-        size_t pri_len = BIO_pending(pri);
-        std::vector<char> pri_key(pri_len);
-        BIO_read(pri, pri_key.data(), pri_len);
-        BIO_free_all(pri);
+        PEM_write_bio_RSAPrivateKey(privBio, rsa, NULL, NULL, 0, NULL, NULL);
+        PEM_write_bio_RSA_PUBKEY(pubBio, rsa);
 
-        BIO *pub = BIO_new(BIO_s_mem());
-        PEM_write_bio_PUBKEY(pub, pkey);
-        size_t pub_len = BIO_pending(pub);
-        std::vector<char> pub_key(pub_len);
-        BIO_read(pub, pub_key.data(), pub_len);
-        BIO_free_all(pub);
+        BUF_MEM* privBuffer;
+        BUF_MEM* pubBuffer;
 
-        EVP_PKEY_free(pkey);
+        BIO_get_mem_ptr(privBio, &privBuffer);
+        BIO_get_mem_ptr(pubBio, &pubBuffer);
+
+        std::string privKey(privBuffer->data, privBuffer->length);
+        std::string pubKey(pubBuffer->data, pubBuffer->length);
+
+        BIO_free_all(privBio);
+        BIO_free_all(pubBio);
 
         Napi::Object keys = Napi::Object::New(env);
-        keys.Set("privateKey", Napi::String::New(env, pri_key.data(), pri_len));
-        keys.Set("publicKey", Napi::String::New(env, pub_key.data(), pub_len));
+        keys.Set("publicKey", Napi::String::New(env, pubKey));
+        keys.Set("privateKey", Napi::String::New(env, privKey));
 
         return keys;
     }
 
     Napi::Value Encrypt(const Napi::CallbackInfo& info) {
         Napi::Env env = info.Env();
-        Napi::HandleScope scope(env);
 
         std::string publicKey = info[0].As<Napi::String>().Utf8Value();
-        std::string plainText = info[1].As<Napi::String>().Utf8Value();
+        std::string text = info[1].As<Napi::String>().Utf8Value();
 
-        BIO *keybio = BIO_new_mem_buf((void*)publicKey.c_str(), -1);
-        EVP_PKEY *pkey = PEM_read_bio_PUBKEY(keybio, NULL, NULL, NULL);
-        BIO_free_all(keybio);
+        BIO* bio = BIO_new_mem_buf(publicKey.data(), -1);
+        RSA* pubKey = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);
+        BIO_free(bio);
 
-        if (!pkey) {
-            Napi::TypeError::New(env, "Invalid public key").ThrowAsJavaScriptException();
-            return env.Null();
+        std::vector<unsigned char> encryptedText(RSA_size(pubKey));
+        int len = RSA_public_encrypt(text.size(), reinterpret_cast<const unsigned char*>(text.data()), encryptedText.data(), pubKey, RSA_PKCS1_OAEP_PADDING);
+        RSA_free(pubKey);
+
+        if (len == -1) {
+            throw std::runtime_error("RSA encryption failed");
         }
 
-        EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
-        EVP_PKEY_encrypt_init(ctx);
-        EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING);
-
-        size_t outlen;
-        EVP_PKEY_encrypt(ctx, NULL, &outlen, reinterpret_cast<const unsigned char*>(plainText.data()), plainText.size());
-        std::vector<unsigned char> encrypted(outlen);
-        EVP_PKEY_encrypt(ctx, encrypted.data(), &outlen, reinterpret_cast<const unsigned char*>(plainText.data()), plainText.size());
-
-        EVP_PKEY_CTX_free(ctx);
-        EVP_PKEY_free(pkey);
-
-        return Napi::String::New(env, std::string(reinterpret_cast<char*>(encrypted.data()), outlen));
+        return Napi::String::New(env, base64Encode(encryptedText.data(), len));
     }
 
     Napi::Value Decrypt(const Napi::CallbackInfo& info) {
         Napi::Env env = info.Env();
-        Napi::HandleScope scope(env);
 
         std::string privateKey = info[0].As<Napi::String>().Utf8Value();
-        std::string cipherText = info[1].As<Napi::String>().Utf8Value();
+        std::string text = info[1].As<Napi::String>().Utf8Value();
 
-        BIO *keybio = BIO_new_mem_buf((void*)privateKey.c_str(), -1);
-        EVP_PKEY *pkey = PEM_read_bio_PrivateKey(keybio, NULL, NULL, NULL);
-        BIO_free_all(keybio);
+        BIO* bio = BIO_new_mem_buf(privateKey.data(), -1);
+        RSA* privKey = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);
+        BIO_free(bio);
 
-        if (!pkey) {
-            Napi::TypeError::New(env, "Invalid private key").ThrowAsJavaScriptException();
-            return env.Null();
+        std::vector<unsigned char> decodedText = base64Decode(text);
+        std::vector<unsigned char> decryptedText(RSA_size(privKey));
+        int len = RSA_private_decrypt(decodedText.size(), decodedText.data(), decryptedText.data(), privKey, RSA_PKCS1_OAEP_PADDING);
+        RSA_free(privKey);
+
+        if (len == -1) {
+            throw std::runtime_error("RSA decryption failed");
         }
 
-        EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
-        EVP_PKEY_decrypt_init(ctx);
-        EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING);
-
-        size_t outlen;
-        EVP_PKEY_decrypt(ctx, NULL, &outlen, reinterpret_cast<const unsigned char*>(cipherText.data()), cipherText.size());
-        std::vector<unsigned char> decrypted(outlen);
-        EVP_PKEY_decrypt(ctx, decrypted.data(), &outlen, reinterpret_cast<const unsigned char*>(cipherText.data()), cipherText.size());
-
-        EVP_PKEY_CTX_free(ctx);
-        EVP_PKEY_free(pkey);
-
-        return Napi::String::New(env, std::string(reinterpret_cast<char*>(decrypted.data()), outlen));
+        return Napi::String::New(env, std::string(reinterpret_cast<const char*>(decryptedText.data()), len));
     }
+
+private:
+    RSA* rsa;
+    static Napi::FunctionReference constructor;
 };
 
 Napi::FunctionReference RSAWrapper::constructor;
@@ -135,4 +156,4 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     return RSAWrapper::Init(env, exports);
 }
 
-NODE_API_MODULE(rsa, Init)
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init)

@@ -1,87 +1,113 @@
-#include <napi.h>
-#include <openssl/evp.h>
-#include <string>
-#include <vector>
+    #include <napi.h>
+    #include <openssl/aes.h>
+    #include <openssl/rand.h>
+    #include <openssl/evp.h>
+    #include <openssl/bio.h>
+    #include <openssl/buffer.h>
+    #include <string>
+    #include <vector>
 
-class AESWrapper : public Napi::ObjectWrap<AESWrapper> {
-public:
-    static Napi::Object Init(Napi::Env env, Napi::Object exports) {
+    std::string base64Encode(const unsigned char* buffer, size_t length) {
+        BIO *bio, *b64;
+        BUF_MEM *bufferPtr;
+
+        b64 = BIO_new(BIO_f_base64());
+        bio = BIO_new(BIO_s_mem());
+        bio = BIO_push(b64, bio);
+
+        BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
+        BIO_write(bio, buffer, length);
+        BIO_flush(bio);
+        BIO_get_mem_ptr(bio, &bufferPtr);
+
+        std::string encodedData(bufferPtr->data, bufferPtr->length);
+        BIO_free_all(bio);
+
+        return encodedData;
+    }
+
+    std::vector<unsigned char> base64Decode(const std::string &base64String) {
+        BIO *bio, *b64;
+
+        int decodeLen = static_cast<int>(base64String.size());
+        std::vector<unsigned char> buffer(decodeLen);
+
+        bio = BIO_new_mem_buf(base64String.c_str(), -1);
+        b64 = BIO_new(BIO_f_base64());
+        bio = BIO_push(b64, bio);
+
+        BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
+        decodeLen = BIO_read(bio, buffer.data(), static_cast<int>(base64String.size()));
+        buffer.resize(decodeLen);
+        BIO_free_all(bio);
+
+        return buffer;
+    }
+
+    class AESWrapper : public Napi::ObjectWrap<AESWrapper> {
+    public:
+        static Napi::Object Init(Napi::Env env, Napi::Object exports);
+        AESWrapper(const Napi::CallbackInfo& info);
+        Napi::Value Encrypt(const Napi::CallbackInfo& info);
+        Napi::Value Decrypt(const Napi::CallbackInfo& info);
+
+    private:
+        AES_KEY encryptKey;
+        AES_KEY decryptKey;
+    };
+
+    Napi::Object AESWrapper::Init(Napi::Env env, Napi::Object exports) {
         Napi::Function func = DefineClass(env, "AESWrapper", {
             InstanceMethod("encrypt", &AESWrapper::Encrypt),
             InstanceMethod("decrypt", &AESWrapper::Decrypt)
         });
 
-        constructor = Napi::Persistent(func);
-        constructor.SuppressDestruct();
+        Napi::FunctionReference* constructor = new Napi::FunctionReference();
+        *constructor = Napi::Persistent(func);
         exports.Set("AESWrapper", func);
+
         return exports;
     }
 
-    AESWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AESWrapper>(info)  {
-        Napi::Env env = info.Env();
-        Napi::HandleScope scope(env);
-
+    AESWrapper::AESWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AESWrapper>(info) {
         std::string key = info[0].As<Napi::String>().Utf8Value();
-        key_ = key;
-
-        encrypt_ctx_ = EVP_CIPHER_CTX_new();
-        decrypt_ctx_ = EVP_CIPHER_CTX_new();
-
-        EVP_EncryptInit_ex(encrypt_ctx_, EVP_aes_128_ecb(), NULL, reinterpret_cast<const unsigned char*>(key_.data()), NULL);
-        EVP_DecryptInit_ex(decrypt_ctx_, EVP_aes_128_ecb(), NULL, reinterpret_cast<const unsigned char*>(key_.data()), NULL);
+        AES_set_encrypt_key(reinterpret_cast<const unsigned char*>(key.data()), 256, &encryptKey);
+        AES_set_decrypt_key(reinterpret_cast<const unsigned char*>(key.data()), 256, &decryptKey);
     }
 
-    ~AESWrapper() {
-        EVP_CIPHER_CTX_free(encrypt_ctx_);
-        EVP_CIPHER_CTX_free(decrypt_ctx_);
-    }
-
-private:
-    static Napi::FunctionReference constructor;
-
-    std::string key_;
-    EVP_CIPHER_CTX *encrypt_ctx_;
-    EVP_CIPHER_CTX *decrypt_ctx_;
-
-    Napi::Value Encrypt(const Napi::CallbackInfo& info) {
+    Napi::Value AESWrapper::Encrypt(const Napi::CallbackInfo& info) {
         Napi::Env env = info.Env();
         Napi::HandleScope scope(env);
 
         std::string plainText = info[0].As<Napi::String>().Utf8Value();
-        std::vector<unsigned char> encryptedText(plainText.size() + EVP_CIPHER_block_size(EVP_aes_128_ecb()));
+        size_t padding = AES_BLOCK_SIZE - (plainText.size() % AES_BLOCK_SIZE);
+        std::string paddedText = plainText + std::string(padding, static_cast<char>(padding));
 
-        int len;
-        EVP_EncryptInit_ex(encrypt_ctx_, NULL, NULL, NULL, NULL);
-        EVP_EncryptUpdate(encrypt_ctx_, encryptedText.data(), &len, reinterpret_cast<const unsigned char*>(plainText.data()), plainText.size());
-        int ciphertext_len = len;
-        EVP_EncryptFinal_ex(encrypt_ctx_, encryptedText.data() + len, &len);
-        ciphertext_len += len;
+        std::vector<unsigned char> encryptedText(paddedText.size());
+        for (size_t i = 0; i < paddedText.size(); i += AES_BLOCK_SIZE) {
+            AES_encrypt(reinterpret_cast<const unsigned char*>(paddedText.data() + i), encryptedText.data() + i, &encryptKey);
+        }
 
-        return Napi::String::New(env, std::string(encryptedText.begin(), encryptedText.begin() + ciphertext_len));
+        return Napi::String::New(env, base64Encode(encryptedText.data(), encryptedText.size()));
     }
 
-    Napi::Value Decrypt(const Napi::CallbackInfo& info) {
+    Napi::Value AESWrapper::Decrypt(const Napi::CallbackInfo& info) {
         Napi::Env env = info.Env();
         Napi::HandleScope scope(env);
 
-        std::string cipherText = info[0].As<Napi::String>().Utf8Value();
-        std::vector<unsigned char> decryptedText(cipherText.size());
+        std::vector<unsigned char> decodedText = base64Decode(info[0].As<Napi::String>().Utf8Value());
+        std::vector<unsigned char> decryptedText(decodedText.size());
 
-        int len;
-        EVP_DecryptInit_ex(decrypt_ctx_, NULL, NULL, NULL, NULL);
-        EVP_DecryptUpdate(decrypt_ctx_, decryptedText.data(), &len, reinterpret_cast<const unsigned char*>(cipherText.data()), cipherText.size());
-        int plaintext_len = len;
-        EVP_DecryptFinal_ex(decrypt_ctx_, decryptedText.data() + len, &len);
-        plaintext_len += len;
+        for (size_t i = 0; i < decodedText.size(); i += AES_BLOCK_SIZE) {
+            AES_decrypt(decodedText.data() + i, decryptedText.data() + i, &decryptKey);
+        }
 
-        return Napi::String::New(env, std::string(decryptedText.begin(), decryptedText.begin() + plaintext_len));
+        size_t padding = decryptedText.back();
+        return Napi::String::New(env, std::string(reinterpret_cast<const char*>(decryptedText.data()), decryptedText.size() - padding));
     }
-};
 
-Napi::FunctionReference AESWrapper::constructor;
+    Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
+        return AESWrapper::Init(env, exports);
+    }
 
-Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    return AESWrapper::Init(env, exports);
-}
-
-NODE_API_MODULE(aes, Init)
+    NODE_API_MODULE(NODE_GYP_MODULE_NAME, InitAll)
