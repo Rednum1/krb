@@ -1,86 +1,98 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css';
 
-function App() {
-  const [aesText, setAesText] = useState('');
-  const [aesKey, setAesKey] = useState('');
-  const [encryptedAesText, setEncryptedAesText] = useState('');
-  const [decryptedAesText, setDecryptedAesText] = useState('');
+const App = () => {
+    const [aesText, setAesText] = useState('');
+    const [aesKey, setAesKey] = useState('');
+    const [aesKeySize, setAesKeySize] = useState(256);
+    const [aesMode, setAesMode] = useState('ECB');
+    const [aesIV, setAesIV] = useState('');
+    const [aesOutputFormat, setAesOutputFormat] = useState('base64');
+    const [encryptedAesText, setEncryptedAesText] = useState('');
+    const [decryptedAesText, setDecryptedAesText] = useState('');
 
-  const [rsaText, setRsaText] = useState('');
-  const [publicKey, setPublicKey] = useState('');
-  const [privateKey, setPrivateKey] = useState('');
-  const [encryptedRsaText, setEncryptedRsaText] = useState('');
-  const [decryptedRsaText, setDecryptedRsaText] = useState('');
+    const encryptAes = async () => {
+        try {
+            const response = await axios.post('http://localhost:3001/encrypt-aes', {
+                text: aesText,
+                key: aesKey,
+                keySize: aesKeySize,
+                mode: aesMode,
+                iv: aesIV,
+                outputFormat: aesOutputFormat
+            });
+            setEncryptedAesText(response.data.encryptedText);
+        } catch (error) {
+            console.error('Error encrypting AES:', error);
+        }
+    };
 
-  const encryptAes = async () => {
-    try {
-      const response = await axios.post('http://localhost:3001/encrypt-aes', { text: aesText, key: aesKey });
-      setEncryptedAesText(response.data.encryptedText);
-    } catch (error) {
-      console.error('Error encrypting AES:', error);
-    }
-  };
+    const decryptAes = async () => {
+        try {
+            const response = await axios.post('http://localhost:3001/decrypt-aes', {
+                text: encryptedAesText,
+                key: aesKey,
+                keySize: aesKeySize,
+                mode: aesMode,
+                iv: aesIV
+            });
+            setDecryptedAesText(response.data.decryptedText);
+        } catch (error) {
+            console.error('Error decrypting AES:', error);
+        }
+    };
 
-  const decryptAes = async () => {
-    try {
-      const response = await axios.post('http://localhost:3001/decrypt-aes', { text: encryptedAesText, key: aesKey });
-      setDecryptedAesText(response.data.decryptedText);
-    } catch (error) {
-      console.error('Error decrypting AES:', error);
-    }
-  };
-
-  const generateRsaKeys = async () => {
-    try {
-      const response = await axios.post('http://localhost:3001/generate-rsa-keys');
-      setPublicKey(response.data.publicKey);
-      setPrivateKey(response.data.privateKey);
-    } catch (error) {
-      console.error('Error generating RSA keys:', error);
-    }
-  };
-
-  const encryptRsa = async () => {
-    try {
-      const response = await axios.post('http://localhost:3001/encrypt-rsa', { text: rsaText, publicKey });
-      setEncryptedRsaText(response.data.encryptedText);
-    } catch (error) {
-      console.error('Error encrypting RSA:', error);
-    }
-  };
-
-  const decryptRsa = async () => {
-    try {
-      const response = await axios.post('http://localhost:3001/decrypt-rsa', { text: encryptedRsaText, privateKey });
-      setDecryptedRsaText(response.data.decryptedText);
-    } catch (error) {
-      console.error('Error decrypting RSA:', error);
-    }
-  };
-
-  return (
-    <div className="App">
-      <h1>AES Encryption</h1>
-      <input type="text" value={aesText} onChange={(e) => setAesText(e.target.value)} placeholder="Text to encrypt" />
-      <input type="text" value={aesKey} onChange={(e) => setAesKey(e.target.value)} placeholder="Encryption key" />
-      <button onClick={encryptAes}>Encrypt AES</button>
-      <p>Encrypted Text: {encryptedAesText}</p>
-      <button onClick={decryptAes}>Decrypt AES</button>
-      <p>Decrypted Text: {decryptedAesText}</p>
-
-      <h1>RSA Encryption</h1>
-      <button onClick={generateRsaKeys}>Generate RSA Keys</button>
-      <p>Public Key: {publicKey}</p>
-      <p>Private Key: {privateKey}</p>
-      <input type="text" value={rsaText} onChange={(e) => setRsaText(e.target.value)} placeholder="Text to encrypt" />
-      <button onClick={encryptRsa}>Encrypt RSA</button>
-      <p>Encrypted Text: {encryptedRsaText}</p>
-      <button onClick={decryptRsa}>Decrypt RSA</button>
-      <p>Decrypted Text: {decryptedRsaText}</p>
-    </div>
-  );
-}
+    return (
+        <div>
+            <h1>AES Encryption</h1>
+            <input
+                type="text"
+                value={aesText}
+                onChange={(e) => setAesText(e.target.value)}
+                placeholder="Text to encrypt"
+            />
+            <input
+                type="text"
+                value={aesKey}
+                onChange={(e) => setAesKey(e.target.value)}
+                placeholder="Encryption key"
+            />
+            <input
+                type="number"
+                value={aesKeySize}
+                onChange={(e) => setAesKeySize(e.target.value)}
+                placeholder="Key size (128, 192, 256)"
+            />
+            <input
+                type="text"
+                value={aesMode}
+                onChange={(e) => setAesMode(e.target.value)}
+                placeholder="Mode (ECB, CBC, etc.)"
+            />
+            <input
+                type="text"
+                value={aesIV}
+                onChange={(e) => setAesIV(e.target.value)}
+                placeholder="Initialization Vector (IV)"
+            />
+            <input
+                type="text"
+                value={aesOutputFormat}
+                onChange={(e) => setAesOutputFormat(e.target.value)}
+                placeholder="Output format (base64, hex, etc.)"
+            />
+            <button onClick={encryptAes}>Encrypt</button>
+            <button onClick={decryptAes}>Decrypt</button>
+            <div>
+                <h2>Encrypted Text:</h2>
+                <p>{encryptedAesText}</p>
+            </div>
+            <div>
+                <h2>Decrypted Text:</h2>
+                <p>{decryptedAesText}</p>
+            </div>
+        </div>
+    );
+};
 
 export default App;

@@ -20,16 +20,19 @@ app.get('/', (req, res) => {
 });
 
 app.post('/encrypt-aes', async (req, res) => {
-    const { text, key } = req.body;
-    const aesInstance = new aesAddon.AESWrapper(key);
+    const { text, key, keySize, mode, iv, outputFormat } = req.body;
+    const aesInstance = new aesAddon.AESWrapper(key, keySize, mode, iv);
     const encryptedText = aesInstance.encrypt(text);
-    await pool.query('INSERT INTO aes_encryption (text, encrypted_text, enc_key) VALUES (?, ?, ?)', [text, encryptedText, key]);
+    await pool.query(
+        'INSERT INTO aes_encryption (text, enc_key, key_size, mode, iv, output_format, result) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+        [text, key, keySize, mode, iv, outputFormat, encryptedText]
+    );
     res.json({ encryptedText });
 });
 
 app.post('/decrypt-aes', async (req, res) => {
-    const { text, key } = req.body;
-    const aesInstance = new aesAddon.AESWrapper(key);
+    const { text, key, keySize, mode, iv } = req.body;
+    const aesInstance = new aesAddon.AESWrapper(key, keySize, mode, iv);
     const decryptedText = aesInstance.decrypt(text);
     res.json({ decryptedText });
 });
@@ -44,7 +47,10 @@ app.post('/encrypt-rsa', async (req, res) => {
     const { text, publicKey } = req.body;
     const rsaInstance = new rsaAddon.RSAWrapper();
     const encryptedText = rsaInstance.encrypt(publicKey, text);
-    await pool.query('INSERT INTO rsa_encryption (text, encrypted_text, public_key) VALUES (?, ?, ?)', [text, encryptedText, publicKey]);
+    await pool.query(
+        'INSERT INTO rsa_encryption (text, encrypted_text, public_key) VALUES (?, ?, ?)', 
+        [text, encryptedText, publicKey]
+    );
     res.json({ encryptedText });
 });
 
