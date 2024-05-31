@@ -6,6 +6,7 @@
 #include <openssl/buffer.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 std::string base64Encode(const unsigned char* buffer, size_t length) {
     BIO *bio, *b64;
@@ -54,9 +55,6 @@ public:
 private:
     AES_KEY encryptKey;
     AES_KEY decryptKey;
-    int keySize;
-    std::string mode;
-    std::vector<unsigned char> iv;
 };
 
 Napi::Object AESWrapper::Init(Napi::Env env, Napi::Object exports) {
@@ -74,13 +72,13 @@ Napi::Object AESWrapper::Init(Napi::Env env, Napi::Object exports) {
 
 AESWrapper::AESWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AESWrapper>(info) {
     std::string key = info[0].As<Napi::String>().Utf8Value();
-    this->keySize = info[1].As<Napi::Number>().Int32Value();
-    this->mode = info[2].As<Napi::String>().Utf8Value();
-    std::string ivStr = info[3].As<Napi::String>().Utf8Value();
-    this->iv = std::vector<unsigned char>(ivStr.begin(), ivStr.end());
-
-    AES_set_encrypt_key(reinterpret_cast<const unsigned char*>(key.data()), this->keySize, &encryptKey);
-    AES_set_decrypt_key(reinterpret_cast<const unsigned char*>(key.data()), this->keySize, &decryptKey);
+    int keyLength = key.size() * 8;
+    if (keyLength != 128 && keyLength != 192 && keyLength != 256) {
+        Napi::Error::New(info.Env(), "Key must be 128, 192, or 256 bits").ThrowAsJavaScriptException();
+        return;
+    }
+    AES_set_encrypt_key(reinterpret_cast<const unsigned char*>(key.data()), keyLength, &encryptKey);
+    AES_set_decrypt_key(reinterpret_cast<const unsigned char*>(key.data()), keyLength, &decryptKey);
 }
 
 Napi::Value AESWrapper::Encrypt(const Napi::CallbackInfo& info) {
@@ -111,7 +109,13 @@ Napi::Value AESWrapper::Decrypt(const Napi::CallbackInfo& info) {
     }
 
     size_t padding = decryptedText.back();
-    return Napi::String::New(env, std::string(reinterpret_cast<const char*>(decryptedText.data()), decryptedText.size() - padding));
+    if (padding > AES_BLOCK_SIZE) {
+        Napi::Error::New(env, "Invalid padding").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    decryptedText.resize(decryptedText.size() - padding);
+    
+    return Napi::String::New(env, std::string(reinterpret_cast<const char*>(decryptedText.data()), decryptedText.size()));
 }
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
