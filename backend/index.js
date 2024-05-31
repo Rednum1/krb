@@ -39,7 +39,7 @@ app.post('/encrypt-aes', async (req, res) => {
 app.post('/decrypt-aes', async (req, res) => {
     try {
         const { text, key, keySize, mode, iv } = req.body;
-        const aesInstance = new aesAddon.AESWrapper(key, keySize, mode, iv, 'base64');
+        const aesInstance = new aesAddon.AESWrapper(key, keySize, mode, iv, 'base64'); // Assume base64 for simplicity
         const decryptedText = aesInstance.decrypt(text);
         res.json({ decryptedText });
     } catch (error) {
