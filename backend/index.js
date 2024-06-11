@@ -51,8 +51,9 @@ app.post('/decrypt-aes', async (req, res) => {
 
 app.post('/generate-rsa-keys', (req, res) => {
     try {
+        const { keySize } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const keys = rsaInstance.generateKeys();
+        const keys = rsaInstance.generateKeys(keySize);
         res.json(keys);
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /generate-rsa-keys: ${error.stack}\n`);
@@ -63,9 +64,9 @@ app.post('/generate-rsa-keys', (req, res) => {
 
 app.post('/encrypt-rsa', async (req, res) => {
     try {
-        const { text, publicKey } = req.body;
+        const { text, publicKey, cipherType } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const encryptedText = rsaInstance.encrypt(publicKey, text);
+        const encryptedText = rsaInstance.encrypt(publicKey, text, cipherType);
         await pool.query('INSERT INTO rsa_encryption (text, encrypted_text, public_key) VALUES (?, ?, ?)', [text, encryptedText, publicKey]);
         res.json({ encryptedText });
     } catch (error) {
@@ -77,9 +78,9 @@ app.post('/encrypt-rsa', async (req, res) => {
 
 app.post('/decrypt-rsa', (req, res) => {
     try {
-        const { text, privateKey } = req.body;
+        const { text, privateKey, cipherType } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const decryptedText = rsaInstance.decrypt(privateKey, text);
+        const decryptedText = rsaInstance.decrypt(privateKey, text, cipherType);
         res.json({ decryptedText });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /decrypt-rsa: ${error.stack}\n`);

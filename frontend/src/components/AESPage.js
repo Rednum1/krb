@@ -4,26 +4,26 @@ import axios from 'axios';
 const AESPage = () => {
     const [aesText, setAesText] = useState('');
     const [aesKey, setAesKey] = useState('');
-    const [aesKeySize, setAesKeySize] = useState(256);
-    const [aesMode, setAesMode] = useState('ECB');
+    const [aesKeySize, setAesKeySize] = useState(128);
+    const [aesMode, setAesMode] = useState('CBC');
     const [aesIV, setAesIV] = useState('');
     const [aesOutputFormat, setAesOutputFormat] = useState('base64');
     const [encryptedAesText, setEncryptedAesText] = useState('');
     const [decryptedAesText, setDecryptedAesText] = useState('');
     const [decryptAesKey, setDecryptAesKey] = useState('');
-    const [decryptAesMode, setDecryptAesMode] = useState('ECB');
+    const [decryptAesMode, setDecryptAesMode] = useState('CBC');
     const [decryptAesIV, setDecryptAesIV] = useState('');
     const [decryptAesText, setDecryptAesText] = useState('');
     const [error, setError] = useState('');
     const [copyMessage, setCopyMessage] = useState('');
 
     const validateKey = (key) => {
-        const keyLength = key.length * 4; // Convert key length to bits
+        const keyLength = key.length * 8; // Convert key length to bits
         return keyLength === 128 || keyLength === 192 || keyLength === 256;
     };
 
     const generateKey = () => {
-        const keyLength = aesKeySize / 8; // Calculate the number of bytes needed
+        const keyLength = aesKeySize / 16; // Calculate the number of bytes needed
         const generatedKey = Array.from(crypto.getRandomValues(new Uint8Array(keyLength)))
             .map(b => b.toString(16).padStart(2, '0'))
             .join('');
@@ -34,6 +34,11 @@ const AESPage = () => {
         if (!validateKey(aesKey)) {
             const keyLength = aesKey.length * 4; // Convert key length to bits
             setError(`Key must be 128, 192, or 256 bits long. Currently it is ${keyLength} bits.`);
+            return;
+        }
+        if ((aesMode === 'CBC' || aesMode === 'CFB') && aesIV.length !== 32) {
+            const missingBytes = 16 - aesIV.length / 2;
+            setError(`IV must be 16 bytes long for CBC and CFB modes. Missing ${missingBytes} bytes.`);
             return;
         }
         setError('');
@@ -56,6 +61,11 @@ const AESPage = () => {
         if (!validateKey(decryptAesKey)) {
             const keyLength = decryptAesKey.length * 4; // Convert key length to bits
             setError(`Key must be 128, 192, or 256 bits long. Currently it is ${keyLength} bits.`);
+            return;
+        }
+        if ((decryptAesMode === 'CBC' || decryptAesMode === 'CFB') && decryptAesIV.length !== 32) {
+            const missingBytes = 16 - decryptAesIV.length / 2;
+            setError(`IV must be 16 bytes long for CBC and CFB modes. Missing ${missingBytes} bytes.`);
             return;
         }
         setError('');
@@ -109,12 +119,14 @@ const AESPage = () => {
                     <option value="CBC">CBC</option>
                     <option value="CFB">CFB</option>
                 </select>
-                <input
-                    type="text"
-                    value={aesIV}
-                    onChange={(e) => setAesIV(e.target.value)}
-                    placeholder="Enter IV (if applicable)"
-                />
+                {(aesMode === 'CBC' || aesMode === 'CFB') && (
+                    <input
+                        type="text"
+                        value={aesIV}
+                        onChange={(e) => setAesIV(e.target.value)}
+                        placeholder="Enter IV (32 hex characters)"
+                    />
+                )}
                 <div>
                     <label>
                         <input
@@ -158,17 +170,24 @@ const AESPage = () => {
                     onChange={(e) => setDecryptAesKey(e.target.value)}
                     placeholder="Enter encryption key"
                 />
+                <select value={aesKeySize} onChange={(e) => setAesKeySize(parseInt(e.target.value))}>
+                    <option value={128}>128</option>
+                    <option value={192}>192</option>
+                    <option value={256}>256</option>
+                </select>
                 <select value={decryptAesMode} onChange={(e) => setDecryptAesMode(e.target.value)}>
                     <option value="ECB">ECB</option>
                     <option value="CBC">CBC</option>
                     <option value="CFB">CFB</option>
                 </select>
-                <input
-                    type="text"
-                    value={decryptAesIV}
-                    onChange={(e) => setDecryptAesIV(e.target.value)}
-                    placeholder="Enter IV (if applicable)"
-                />
+                {(decryptAesMode === 'CBC' || decryptAesMode === 'CFB') && (
+                    <input
+                        type="text"
+                        value={decryptAesIV}
+                        onChange={(e) => setDecryptAesIV(e.target.value)}
+                        placeholder="Enter IV (32 hex characters)"
+                    />
+                )}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <button onClick={decryptAes}>Decrypt</button>
                 <button onClick={() => copyToClipboard(decryptedAesText)}>Copy Decrypted Text</button>
