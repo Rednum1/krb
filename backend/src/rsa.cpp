@@ -7,6 +7,10 @@
 #include <string>
 #include <vector>
 
+#define CRYPTO_RSA_KEY_LEN_4096 4096
+#define CRYPTO_RSA_KEY_LEN_2048 2048
+#define CRYPTO_RSA_KEY_LEN_1024 1024
+
 std::string base64Encode(const unsigned char* buffer, size_t length) {
     BIO *bio, *b64;
     BUF_MEM *bufferPtr;
@@ -70,11 +74,13 @@ public:
 
     Napi::Value GenerateKeys(const Napi::CallbackInfo& info) {
         Napi::Env env = info.Env();
+        int keySize = info[0].As<Napi::Number>().Int32Value(); // Accept key size as a parameter
 
         BIGNUM* e = BN_new();
         BN_set_word(e, RSA_F4);
 
-        RSA_generate_key_ex(rsa, 2048, e, NULL);
+        // Generate RSA key pair with the specified key size
+        RSA_generate_key_ex(rsa, keySize, e, NULL);
         BN_free(e);
 
         BIO* privBio = BIO_new(BIO_s_mem());
@@ -107,13 +113,25 @@ public:
 
         std::string publicKey = info[0].As<Napi::String>().Utf8Value();
         std::string text = info[1].As<Napi::String>().Utf8Value();
+        std::string cipherType = info[2].As<Napi::String>().Utf8Value();
 
         BIO* bio = BIO_new_mem_buf(publicKey.data(), -1);
         RSA* pubKey = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);
         BIO_free(bio);
 
+        int padding;
+        if (cipherType == "OAEP") {
+            padding = RSA_PKCS1_OAEP_PADDING;
+        } else if (cipherType == "PKCS1") {
+            padding = RSA_PKCS1_PADDING;
+        } else if (cipherType == "RSA") {
+            padding = RSA_NO_PADDING;
+        } else {
+            throw std::invalid_argument("Unsupported cipher type");
+        }
+
         std::vector<unsigned char> encryptedText(RSA_size(pubKey));
-        int len = RSA_public_encrypt(text.size(), reinterpret_cast<const unsigned char*>(text.data()), encryptedText.data(), pubKey, RSA_PKCS1_OAEP_PADDING);
+        int len = RSA_public_encrypt(text.size(), reinterpret_cast<const unsigned char*>(text.data()), encryptedText.data(), pubKey, padding);
         RSA_free(pubKey);
 
         if (len == -1) {
@@ -128,6 +146,7 @@ public:
 
         std::string privateKey = info[0].As<Napi::String>().Utf8Value();
         std::string text = info[1].As<Napi::String>().Utf8Value();
+        std::string cipherType = info[2].As<Napi::String>().Utf8Value();
 
         BIO* bio = BIO_new_mem_buf(privateKey.data(), -1);
         RSA* privKey = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);
@@ -135,7 +154,19 @@ public:
 
         std::vector<unsigned char> decodedText = base64Decode(text);
         std::vector<unsigned char> decryptedText(RSA_size(privKey));
-        int len = RSA_private_decrypt(decodedText.size(), decodedText.data(), decryptedText.data(), privKey, RSA_PKCS1_OAEP_PADDING);
+
+        int padding;
+        if (cipherType == "OAEP") {
+            padding = RSA_PKCS1_OAEP_PADDING;
+        } else if (cipherType == "PKCS1") {
+            padding = RSA_PKCS1_PADDING;
+        } else if (cipherType == "RSA") {
+            padding = RSA_NO_PADDING;
+        } else {
+            throw std::invalid_argument("Unsupported cipher type");
+        }
+
+        int len = RSA_private_decrypt(decodedText.size(), decodedText.data(), decryptedText.data(), privKey, padding);
         RSA_free(privKey);
 
         if (len == -1) {
