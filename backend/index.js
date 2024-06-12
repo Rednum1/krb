@@ -25,9 +25,18 @@ app.get('/', (req, res) => {
 app.post('/encrypt-aes', async (req, res) => {
     try {
         const { text, key, keySize, mode, iv, outputFormat } = req.body;
-        const aesInstance = new aesAddon.AESWrapper(key, keySize, mode, iv, outputFormat);
+        const aesInstance = new aesAddon.AESWrapper(key, mode, iv);
+        const start = process.hrtime();
         const encryptedText = aesInstance.encrypt(text);
-        await pool.query('INSERT INTO aes_encryption (text, enc_key, key_size, mode, iv, output_format, result) VALUES (?, ?, ?, ?, ?, ?, ?)', [text, key, keySize, mode, iv, outputFormat, encryptedText]);
+        const end = process.hrtime(start);
+
+        const encryptionTime = end[0] + end[1] / 1e9; // час у секундах
+        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+
+        await pool.query(
+            'INSERT INTO aes_enc (user_text, enc_key, key_size, enc_mode, iv, output_format, result, encryption_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [text, key, keySize, mode, iv, outputFormat, encryptedText, encryptionTime, memoryUsed]
+        );
         res.json({ encryptedText });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /encrypt-aes: ${error.stack}\n`);
@@ -39,8 +48,18 @@ app.post('/encrypt-aes', async (req, res) => {
 app.post('/decrypt-aes', async (req, res) => {
     try {
         const { text, key, keySize, mode, iv } = req.body;
-        const aesInstance = new aesAddon.AESWrapper(key, keySize, mode, iv, 'base64'); // Assume base64 for simplicity
+        const aesInstance = new aesAddon.AESWrapper(key, mode, iv);
+        const start = process.hrtime();
         const decryptedText = aesInstance.decrypt(text);
+        const end = process.hrtime(start);
+
+        const decryptionTime = end[0] + end[1] / 1e9; // час у секундах
+        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+
+        await pool.query(
+            'INSERT INTO aes_dec (enc_text, enc_key, key_size, dec_mode, iv, output_format, result, dec_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [text, key, keySize, mode, iv, 'base64', decryptedText, decryptionTime, memoryUsed]
+        );
         res.json({ decryptedText });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /decrypt-aes: ${error.stack}\n`);
@@ -51,9 +70,8 @@ app.post('/decrypt-aes', async (req, res) => {
 
 app.post('/generate-rsa-keys', (req, res) => {
     try {
-        const { keySize } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const keys = rsaInstance.generateKeys(keySize);
+        const keys = rsaInstance.generateKeys();
         res.json(keys);
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /generate-rsa-keys: ${error.stack}\n`);
@@ -64,10 +82,19 @@ app.post('/generate-rsa-keys', (req, res) => {
 
 app.post('/encrypt-rsa', async (req, res) => {
     try {
-        const { text, publicKey, cipherType } = req.body;
+        const { text, publicKey } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const encryptedText = rsaInstance.encrypt(publicKey, text, cipherType);
-        await pool.query('INSERT INTO rsa_encryption (text, encrypted_text, public_key) VALUES (?, ?, ?)', [text, encryptedText, publicKey]);
+        const start = process.hrtime();
+        const encryptedText = rsaInstance.encrypt(publicKey, text);
+        const end = process.hrtime(start);
+
+        const encryptionTime = end[0] + end[1] / 1e9; // час у секундах
+        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+
+        await pool.query(
+            'INSERT INTO rsa_enc (enc_text, public_key, private_key, key_size, enc_time, memory_used) VALUES (?, ?, ?, ?, ?, ?)',
+            [text, encryptedText, publicKey, 2048, encryptionTime, memoryUsed]
+        );
         res.json({ encryptedText });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /encrypt-rsa: ${error.stack}\n`);
@@ -76,11 +103,21 @@ app.post('/encrypt-rsa', async (req, res) => {
     }
 });
 
-app.post('/decrypt-rsa', (req, res) => {
+app.post('/decrypt-rsa', async (req, res) => {
     try {
-        const { text, privateKey, cipherType } = req.body;
+        const { text, privateKey } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const decryptedText = rsaInstance.decrypt(privateKey, text, cipherType);
+        const start = process.hrtime();
+        const decryptedText = rsaInstance.decrypt(privateKey, text);
+        const end = process.hrtime(start);
+
+        const decryptionTime = end[0] + end[1] / 1e9; // час у секундах
+        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+
+        await pool.query(
+            'INSERT INTO rsa_dec (encrypted_text, private_key, result, key_size, decryption_time, memory_used) VALUES (?, ?, ?, ?, ?, ?)',
+            [text, privateKey, decryptedText, 2048, decryptionTime, memoryUsed]
+        );
         res.json({ decryptedText });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /decrypt-rsa: ${error.stack}\n`);
@@ -91,7 +128,7 @@ app.post('/decrypt-rsa', (req, res) => {
 
 app.get('/results/aes', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT text, enc_key, key_size, mode, iv, output_format, result FROM aes_encryption');
+        const [rows] = await pool.query('SELECT * FROM aes_enc');
         res.json(rows);
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /results/aes: ${error.stack}\n`);
@@ -102,7 +139,7 @@ app.get('/results/aes', async (req, res) => {
 
 app.get('/results/rsa', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT text, encrypted_text, public_key FROM rsa_encryption');
+        const [rows] = await pool.query('SELECT * FROM rsa_enc');
         res.json(rows);
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /results/rsa: ${error.stack}\n`);

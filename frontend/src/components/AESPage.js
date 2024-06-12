@@ -11,19 +11,20 @@ const AESPage = () => {
     const [encryptedAesText, setEncryptedAesText] = useState('');
     const [decryptedAesText, setDecryptedAesText] = useState('');
     const [decryptAesKey, setDecryptAesKey] = useState('');
+    const [decryptAesKeySize, setDecryptAesKeySize] = useState(128);
     const [decryptAesMode, setDecryptAesMode] = useState('CBC');
     const [decryptAesIV, setDecryptAesIV] = useState('');
     const [decryptAesText, setDecryptAesText] = useState('');
     const [error, setError] = useState('');
     const [copyMessage, setCopyMessage] = useState('');
 
-    const validateKey = (key) => {
-        const keyLength = key.length * 8; // Convert key length to bits
-        return keyLength === 128 || keyLength === 192 || keyLength === 256;
+    const validateKey = (key, keySize) => {
+        const keyLength = key.length * 4; // Convert key length to bits
+        return keyLength === keySize;
     };
 
     const generateKey = () => {
-        const keyLength = aesKeySize / 16; // Calculate the number of bytes needed
+        const keyLength = aesKeySize / 8; // Calculate the number of bytes needed
         const generatedKey = Array.from(crypto.getRandomValues(new Uint8Array(keyLength)))
             .map(b => b.toString(16).padStart(2, '0'))
             .join('');
@@ -31,9 +32,9 @@ const AESPage = () => {
     };
 
     const encryptAes = async () => {
-        if (!validateKey(aesKey)) {
+        if (!validateKey(aesKey, aesKeySize)) {
             const keyLength = aesKey.length * 4; // Convert key length to bits
-            setError(`Key must be 128, 192, or 256 bits long. Currently it is ${keyLength} bits.`);
+            setError(`Key must be ${aesKeySize} bits long. Currently it is ${keyLength} bits.`);
             return;
         }
         if ((aesMode === 'CBC' || aesMode === 'CFB') && aesIV.length !== 32) {
@@ -58,9 +59,9 @@ const AESPage = () => {
     };
 
     const decryptAes = async () => {
-        if (!validateKey(decryptAesKey)) {
+        if (!validateKey(decryptAesKey, decryptAesKeySize)) {
             const keyLength = decryptAesKey.length * 4; // Convert key length to bits
-            setError(`Key must be 128, 192, or 256 bits long. Currently it is ${keyLength} bits.`);
+            setError(`Key must be ${decryptAesKeySize} bits long. Currently it is ${keyLength} bits.`);
             return;
         }
         if ((decryptAesMode === 'CBC' || decryptAesMode === 'CFB') && decryptAesIV.length !== 32) {
@@ -73,7 +74,7 @@ const AESPage = () => {
             const response = await axios.post('http://localhost:3001/decrypt-aes', {
                 text: decryptAesText,
                 key: decryptAesKey,
-                keySize: aesKeySize,
+                keySize: decryptAesKeySize,
                 mode: decryptAesMode,
                 iv: decryptAesIV
             });
@@ -168,9 +169,9 @@ const AESPage = () => {
                     type="text"
                     value={decryptAesKey}
                     onChange={(e) => setDecryptAesKey(e.target.value)}
-                    placeholder="Enter encryption key"
+                    placeholder="Enter decryption key"
                 />
-                <select value={aesKeySize} onChange={(e) => setAesKeySize(parseInt(e.target.value))}>
+                <select value={decryptAesKeySize} onChange={(e) => setDecryptAesKeySize(parseInt(e.target.value))}>
                     <option value={128}>128</option>
                     <option value={192}>192</option>
                     <option value={256}>256</option>

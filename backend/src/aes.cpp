@@ -67,13 +67,15 @@ private:
 
     void AES_CFB_encrypt(const std::vector<unsigned char>& plainText, std::vector<unsigned char>& cipherText);
     void AES_CFB_decrypt(const std::vector<unsigned char>& cipherText, std::vector<unsigned char>& plainText);
+
+    void handlePadding(std::vector<unsigned char>& text, bool addPadding);
 };
 
 Napi::Object AESWrapper::Init(Napi::Env env, Napi::Object exports) {
     Napi::Function func = DefineClass(env, "AESWrapper", {
         InstanceMethod("encrypt", &AESWrapper::Encrypt),
         InstanceMethod("decrypt", &AESWrapper::Decrypt),
-        InstanceMethod("getIV", &AESWrapper::GetIV) // Додавання нового методу
+        InstanceMethod("getIV", &AESWrapper::GetIV)
     });
 
     Napi::FunctionReference* constructor = new Napi::FunctionReference();
@@ -97,11 +99,8 @@ AESWrapper::AESWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AESWra
             }
             std::copy(ivStr.begin(), ivStr.end(), this->iv.begin());
         } else {
-            // Generate a random IV if not provided
-            if (!RAND_bytes(this->iv.data(), AES_BLOCK_SIZE)) {
-                Napi::Error::New(info.Env(), "Failed to generate IV").ThrowAsJavaScriptException();
-                return;
-            }
+            Napi::Error::New(info.Env(), "IV must be provided for CBC and CFB modes").ThrowAsJavaScriptException();
+            return;
         }
     }
 
@@ -148,22 +147,35 @@ void AESWrapper::AES_CFB_decrypt(const std::vector<unsigned char>& cipherText, s
     AES_cfb128_encrypt(cipherText.data(), plainText.data(), cipherText.size(), &decryptKey, iv_copy.data(), &num, AES_DECRYPT);
 }
 
+void AESWrapper::handlePadding(std::vector<unsigned char>& text, bool addPadding) {
+    if (addPadding) {
+        size_t padding = AES_BLOCK_SIZE - (text.size() % AES_BLOCK_SIZE);
+        text.insert(text.end(), padding, static_cast<unsigned char>(padding));
+    } else {
+        size_t padding = text.back();
+        if (padding > AES_BLOCK_SIZE) {
+            throw std::runtime_error("Invalid padding");
+        }
+        text.resize(text.size() - padding);
+    }
+}
+
 Napi::Value AESWrapper::Encrypt(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     Napi::HandleScope scope(env);
 
     std::string plainText = info[0].As<Napi::String>().Utf8Value();
-    size_t padding = AES_BLOCK_SIZE - (plainText.size() % AES_BLOCK_SIZE);
-    std::string paddedText = plainText + std::string(padding, static_cast<char>(padding));
+    std::vector<unsigned char> paddedText(plainText.begin(), plainText.end());
+    handlePadding(paddedText, true);
 
     std::vector<unsigned char> encryptedText(paddedText.size());
 
     if (this->mode == "ECB") {
-        AES_ECB_encrypt(std::vector<unsigned char>(paddedText.begin(), paddedText.end()), encryptedText);
+        AES_ECB_encrypt(paddedText, encryptedText);
     } else if (this->mode == "CBC") {
-        AES_CBC_encrypt(std::vector<unsigned char>(paddedText.begin(), paddedText.end()), encryptedText);
+        AES_CBC_encrypt(paddedText, encryptedText);
     } else if (this->mode == "CFB") {
-        AES_CFB_encrypt(std::vector<unsigned char>(paddedText.begin(), paddedText.end()), encryptedText);
+        AES_CFB_encrypt(paddedText, encryptedText);
     } else {
         Napi::Error::New(env, "Unsupported mode").ThrowAsJavaScriptException();
         return env.Null();
@@ -190,14 +202,14 @@ Napi::Value AESWrapper::Decrypt(const Napi::CallbackInfo& info) {
         return env.Null();
     }
 
-    size_t padding = decryptedText.back();
-    if (padding > AES_BLOCK_SIZE) {
-        Napi::Error::New(env, "Invalid padding").ThrowAsJavaScriptException();
+    try {
+        handlePadding(decryptedText, false);
+    } catch (const std::runtime_error& e) {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
         return env.Null();
     }
-    decryptedText.resize(decryptedText.size() - padding);
-    
-    return Napi::String::New(env, std::string(reinterpret_cast<const char*>(decryptedText.data()), decryptedText.size()));
+
+    return Napi::String::New(env, std::string(decryptedText.begin(), decryptedText.end()));
 }
 
 Napi::Value AESWrapper::GetIV(const Napi::CallbackInfo& info) {
