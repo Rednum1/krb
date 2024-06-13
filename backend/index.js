@@ -4,6 +4,7 @@ const mysql = require('mysql2/promise');
 const fs = require('fs');
 const aesAddon = require('./build/Release/aes');
 const rsaAddon = require('./build/Release/rsa');
+const { performance } = require('perf_hooks');
 
 const app = express();
 app.use(cors());
@@ -22,22 +23,27 @@ app.get('/', (req, res) => {
     res.send('Welcome to the AES and RSA Encryption Server');
 });
 
+// AES Encryption Endpoint
 app.post('/encrypt-aes', async (req, res) => {
     try {
         const { text, key, keySize, mode, iv, outputFormat } = req.body;
         const aesInstance = new aesAddon.AESWrapper(key, mode, iv);
-        const start = process.hrtime();
+
+        const startMemory = process.memoryUsage().heapUsed / 1024 / 1024;
+        const startTime = performance.now();
+
         const encryptedText = aesInstance.encrypt(text);
-        const end = process.hrtime(start);
 
-        const encryptionTime = end[0] + end[1] / 1e9; // час у секундах
-        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+        const endTime = performance.now();
+        const endMemory = process.memoryUsage().heapUsed / 1024 / 1024;
 
-        await pool.query(
-            'INSERT INTO aes_enc (user_text, enc_key, key_size, enc_mode, iv, output_format, result, encryption_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [text, key, keySize, mode, iv, outputFormat, encryptedText, encryptionTime, memoryUsed]
-        );
-        res.json({ encryptedText });
+        const encryptionTime = (endTime - startTime) / 1000;
+        const memoryUsed = endMemory - startMemory;
+
+        await pool.query('INSERT INTO aes_enc (user_text, enc_key, key_size, enc_mode, iv, output_format, result, encryption_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+        [text, key, keySize, mode, iv, outputFormat, encryptedText, encryptionTime, memoryUsed]);
+
+        res.json({ encryptedText, encryptionTime, memoryUsed });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /encrypt-aes: ${error.stack}\n`);
         console.error('Error in /encrypt-aes:', error);
@@ -45,22 +51,27 @@ app.post('/encrypt-aes', async (req, res) => {
     }
 });
 
+// AES Decryption Endpoint
 app.post('/decrypt-aes', async (req, res) => {
     try {
         const { text, key, keySize, mode, iv } = req.body;
         const aesInstance = new aesAddon.AESWrapper(key, mode, iv);
-        const start = process.hrtime();
+
+        const startMemory = process.memoryUsage().heapUsed / 1024 / 1024;
+        const startTime = performance.now();
+
         const decryptedText = aesInstance.decrypt(text);
-        const end = process.hrtime(start);
 
-        const decryptionTime = end[0] + end[1] / 1e9; // час у секундах
-        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+        const endTime = performance.now();
+        const endMemory = process.memoryUsage().heapUsed / 1024 / 1024;
 
-        await pool.query(
-            'INSERT INTO aes_dec (enc_text, enc_key, key_size, dec_mode, iv, output_format, result, dec_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [text, key, keySize, mode, iv, 'base64', decryptedText, decryptionTime, memoryUsed]
-        );
-        res.json({ decryptedText });
+        const decryptionTime = (endTime - startTime) / 1000;
+        const memoryUsed = endMemory - startMemory;
+
+        await pool.query('INSERT INTO aes_dec (enc_text, enc_key, key_size, dec_mode, iv, output_format, result, dec_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+        [text, key, keySize, mode, iv, 'base64', decryptedText, decryptionTime, memoryUsed]);
+
+        res.json({ decryptedText, decryptionTime, memoryUsed });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /decrypt-aes: ${error.stack}\n`);
         console.error('Error in /decrypt-aes:', error);
@@ -68,6 +79,7 @@ app.post('/decrypt-aes', async (req, res) => {
     }
 });
 
+// RSA Key Generation Endpoint
 app.post('/generate-rsa-keys', (req, res) => {
     try {
         const rsaInstance = new rsaAddon.RSAWrapper();
@@ -80,22 +92,27 @@ app.post('/generate-rsa-keys', (req, res) => {
     }
 });
 
+// RSA Encryption Endpoint
 app.post('/encrypt-rsa', async (req, res) => {
     try {
-        const { text, publicKey } = req.body;
+        const { text, publicKey, keySize, cipherType } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const start = process.hrtime();
-        const encryptedText = rsaInstance.encrypt(publicKey, text);
-        const end = process.hrtime(start);
 
-        const encryptionTime = end[0] + end[1] / 1e9; // час у секундах
-        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+        const startMemory = process.memoryUsage().heapUsed / 1024 / 1024;
+        const startTime = performance.now();
 
-        await pool.query(
-            'INSERT INTO rsa_enc (enc_text, public_key, private_key, key_size, enc_time, memory_used) VALUES (?, ?, ?, ?, ?, ?)',
-            [text, encryptedText, publicKey, 2048, encryptionTime, memoryUsed]
-        );
-        res.json({ encryptedText });
+        const encryptedText = rsaInstance.encrypt(publicKey, text, cipherType);
+
+        const endTime = performance.now();
+        const endMemory = process.memoryUsage().heapUsed / 1024 / 1024;
+
+        const encryptionTime = (endTime - startTime) / 1000;
+        const memoryUsed = endMemory - startMemory;
+
+        await pool.query('INSERT INTO rsa_enc (enc_text, public_key, cipher_type, private_key, key_size, enc_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+        [text, publicKey, cipherType, null, keySize, encryptionTime, memoryUsed]);
+
+        res.json({ encryptedText, encryptionTime, memoryUsed });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /encrypt-rsa: ${error.stack}\n`);
         console.error('Error in /encrypt-rsa:', error);
@@ -103,22 +120,29 @@ app.post('/encrypt-rsa', async (req, res) => {
     }
 });
 
+
+
+// RSA Decryption Endpoint
 app.post('/decrypt-rsa', async (req, res) => {
     try {
-        const { text, privateKey } = req.body;
+        const { text, privateKey, keySize, cipherType } = req.body;
         const rsaInstance = new rsaAddon.RSAWrapper();
-        const start = process.hrtime();
-        const decryptedText = rsaInstance.decrypt(privateKey, text);
-        const end = process.hrtime(start);
 
-        const decryptionTime = end[0] + end[1] / 1e9; // час у секундах
-        const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // пам'ять у мегабайтах
+        const startMemory = process.memoryUsage().heapUsed / 1024 / 1024;
+        const startTime = performance.now();
 
-        await pool.query(
-            'INSERT INTO rsa_dec (encrypted_text, private_key, result, key_size, decryption_time, memory_used) VALUES (?, ?, ?, ?, ?, ?)',
-            [text, privateKey, decryptedText, 2048, decryptionTime, memoryUsed]
-        );
-        res.json({ decryptedText });
+        const decryptedText = rsaInstance.decrypt(privateKey, text, cipherType);
+
+        const endTime = performance.now();
+        const endMemory = process.memoryUsage().heapUsed / 1024 / 1024;
+
+        const decryptionTime = (endTime - startTime) / 1000;
+        const memoryUsed = endMemory - startMemory;
+
+        await pool.query('INSERT INTO rsa_dec (encrypted_text, private_key, result, cipher_type, key_size, decryption_time, memory_used) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+        [text, privateKey, decryptedText, cipherType, keySize, decryptionTime, memoryUsed]);
+
+        res.json({ decryptedText, decryptionTime, memoryUsed });
     } catch (error) {
         logStream.write(`[${new Date().toISOString()}] Error in /decrypt-rsa: ${error.stack}\n`);
         console.error('Error in /decrypt-rsa:', error);
@@ -126,6 +150,7 @@ app.post('/decrypt-rsa', async (req, res) => {
     }
 });
 
+// Get AES Results Endpoint
 app.get('/results/aes', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM aes_enc');
@@ -137,6 +162,7 @@ app.get('/results/aes', async (req, res) => {
     }
 });
 
+// Get RSA Results Endpoint
 app.get('/results/rsa', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM rsa_enc');

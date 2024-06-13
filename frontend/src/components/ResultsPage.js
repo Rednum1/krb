@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './ResultsPage.css';
 
 const ResultsPage = () => {
     const [aesResults, setAesResults] = useState([]);
@@ -29,10 +30,10 @@ const ResultsPage = () => {
     }, []);
 
     return (
-        <div>
+        <div className="results-page">
             <h1>Results</h1>
             <h2>AES Encryption Results</h2>
-            <table>
+            <table className="results-table">
                 <thead>
                     <tr>
                         <th>Text</th>
@@ -42,37 +43,49 @@ const ResultsPage = () => {
                         <th>Mode</th>
                         <th>IV</th>
                         <th>Output Format</th>
+                        <th>Encryption Time</th>
+                        <th>Memory Used</th>
                     </tr>
                 </thead>
                 <tbody>
                     {aesResults.map((result, index) => (
                         <tr key={index}>
-                            <td>{result.text}</td>
+                            <td>{result.user_text}</td>
                             <td>{result.result}</td>
                             <td>{result.enc_key}</td>
                             <td>{result.key_size}</td>
-                            <td>{result.mode}</td>
+                            <td>{result.enc_mode}</td>
                             <td>{result.iv}</td>
                             <td>{result.output_format}</td>
+                            <td>{result.encryption_time}</td>
+                            <td>{result.memory_used}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <h2>RSA Encryption Results</h2>
-            <table>
+            <table className="results-table">
                 <thead>
                     <tr>
                         <th>Text</th>
                         <th>Encrypted Text</th>
                         <th>Public Key</th>
+                        <th>Cipher Type</th>
+                        <th>Key Size</th>
+                        <th>Encryption Time</th>
+                        <th>Memory Used</th>
                     </tr>
                 </thead>
                 <tbody>
                     {rsaResults.map((result, index) => (
                         <tr key={index}>
-                            <td>{result.text}</td>
-                            <td>{result.encrypted_text}</td>
+                            <td>{result.enc_text}</td>
+                            <td>{result.result}</td>
                             <td>{result.public_key}</td>
+                            <td>{result.cipher_type}</td>
+                            <td>{result.key_size}</td>
+                            <td>{result.enc_time}</td>
+                            <td>{result.memory_used}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -9,6 +9,10 @@ const RSAPage = () => {
     const [decryptedRsaText, setDecryptedRsaText] = useState('');
     const [keySize, setKeySize] = useState(1024);
     const [cipherType, setCipherType] = useState('OAEP');
+    const [encryptionTime, setEncryptionTime] = useState('0:00');
+    const [encryptionMemoryUsed, setEncryptionMemoryUsed] = useState('0');
+    const [decryptionTime, setDecryptionTime] = useState('0:00');
+    const [decryptionMemoryUsed, setDecryptionMemoryUsed] = useState('0');
 
     const generateKeys = async () => {
         try {
@@ -25,9 +29,12 @@ const RSAPage = () => {
             const response = await axios.post('http://localhost:3001/encrypt-rsa', {
                 text: rsaText,
                 publicKey: publicKey,
+                keySize: keySize,
                 cipherType: cipherType
             });
             setEncryptedRsaText(response.data.encryptedText);
+            setEncryptionTime(response.data.encryptionTime);
+            setEncryptionMemoryUsed(response.data.memoryUsed);
         } catch (error) {
             console.error('Error encrypting RSA:', error);
         }
@@ -38,9 +45,12 @@ const RSAPage = () => {
             const response = await axios.post('http://localhost:3001/decrypt-rsa', {
                 text: encryptedRsaText,
                 privateKey: privateKey,
+                keySize: keySize,
                 cipherType: cipherType
             });
             setDecryptedRsaText(response.data.decryptedText);
+            setDecryptionTime(response.data.decryptionTime);
+            setDecryptionMemoryUsed(response.data.memoryUsed);
         } catch (error) {
             console.error('Error decrypting RSA:', error);
         }
@@ -81,14 +91,39 @@ const RSAPage = () => {
                 placeholder="Enter text to encrypt"
             />
             <button onClick={encryptRsa}>Encrypt</button>
-            <button onClick={decryptRsa}>Decrypt</button>
             <div>
                 <h2>Encrypted Text</h2>
                 <p>{encryptedRsaText}</p>
+                <p>Encryption Time: {encryptionTime} seconds</p>
+                <p>Memory Used: {encryptionMemoryUsed} MB</p>
+            </div>
+            <div>
+                <h2>Decrypt</h2>
+                <div>
+                <label>Cipher Type: </label>
+                <select value={cipherType} onChange={(e) => setCipherType(e.target.value)}>
+                    <option value="OAEP">OAEP</option>
+                    <option value="PKCS1">PKCS1</option>
+                    <option value="RSA">RSA</option>
+                </select>
+            </div>
+                <textarea
+                    value={privateKey}
+                    onChange={(e) => setPrivateKey(e.target.value)}
+                    placeholder="Enter private key"
+                />
+                <textarea
+                    value={encryptedRsaText}
+                    onChange={(e) => setEncryptedRsaText(e.target.value)}
+                    placeholder="Enter encrypted text"
+                />
+                <button onClick={decryptRsa}>Decrypt</button>
             </div>
             <div>
                 <h2>Decrypted Text</h2>
                 <p>{decryptedRsaText}</p>
+                <p>Decryption Time: {decryptionTime} seconds</p>
+                <p>Memory Used: {decryptionMemoryUsed} MB</p>
             </div>
         </div>
     );

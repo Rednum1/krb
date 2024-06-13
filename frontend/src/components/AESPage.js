@@ -9,7 +9,11 @@ const AESPage = () => {
     const [aesIV, setAesIV] = useState('');
     const [aesOutputFormat, setAesOutputFormat] = useState('base64');
     const [encryptedAesText, setEncryptedAesText] = useState('');
+    const [encryptionTime, setEncryptionTime] = useState('0:00');
+    const [encryptionMemoryUsed, setEncryptionMemoryUsed] = useState('0');
     const [decryptedAesText, setDecryptedAesText] = useState('');
+    const [decryptionTime, setDecryptionTime] = useState('0:00');
+    const [decryptionMemoryUsed, setDecryptionMemoryUsed] = useState('0');
     const [decryptAesKey, setDecryptAesKey] = useState('');
     const [decryptAesKeySize, setDecryptAesKeySize] = useState(128);
     const [decryptAesMode, setDecryptAesMode] = useState('CBC');
@@ -53,6 +57,8 @@ const AESPage = () => {
                 outputFormat: aesOutputFormat
             });
             setEncryptedAesText(response.data.encryptedText);
+            setEncryptionTime(response.data.encryptionTime);
+            setEncryptionMemoryUsed(response.data.memoryUsed);
         } catch (error) {
             console.error('Error encrypting AES:', error);
         }
@@ -79,6 +85,8 @@ const AESPage = () => {
                 iv: decryptAesIV
             });
             setDecryptedAesText(response.data.decryptedText);
+            setDecryptionTime(response.data.decryptionTime);
+            setDecryptionMemoryUsed(response.data.memoryUsed);
         } catch (error) {
             console.error('Error decrypting AES:', error);
         }
@@ -154,6 +162,8 @@ const AESPage = () => {
                 <div>
                     <h2>Encrypted Text</h2>
                     <p>{encryptedAesText}</p>
+                    <p>Encryption Time: {encryptionTime !== null ? `${encryptionTime} seconds` : ''}</p>
+                    <p>Memory Used: {encryptionMemoryUsed !== null ? `${encryptionMemoryUsed} MB` : ''}</p>
                 </div>
                 {copyMessage && <p>{copyMessage}</p>}
             </div>
@@ -195,6 +205,8 @@ const AESPage = () => {
                 <div>
                     <h2>Decrypted Text</h2>
                     <p>{decryptedAesText}</p>
+                    <p>Decryption Time: {decryptionTime !== null ? `${decryptionTime} seconds` : ''}</p>
+                    <p>Memory Used: {decryptionMemoryUsed !== null ? `${decryptionMemoryUsed} MB` : ''}</p>
                 </div>
                 {copyMessage && <p>{copyMessage}</p>}
             </div>
