@@ -1,0 +1,319 @@
+[2024-06-13T13:38:44.862Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:106:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T13:38:49.337Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:106:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T13:38:59.327Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:106:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T13:40:53.520Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:106:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:25:42.425Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:106:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:26:25.900Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:28:38.434Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:28:50.829Z] Error in /encrypt-rsa: Error: Field 'private_key' doesn't have a default value
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:30:43.279Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:33:38.696Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:33:50.201Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:36:14.135Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:36:45.619Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:37:15.938Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:45:00.685Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:45:02.787Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:45:32.811Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:45:38.951Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:45:41.372Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:45:41.551Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:46:02.718Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:46:32.370Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:47:32.218Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:47:33.995Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:48:17.958Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:48:25.256Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:50:40.127Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:50:48.957Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5
+[2024-06-13T16:50:53.064Z] Error in /encrypt-rsa: Error: Column count doesn't match value count at row 1
+    at PromisePool.query (D:\kp\krb\aes-encryption-app\backend\node_modules\mysql2\promise.js:356:22)
+    at D:\kp\krb\aes-encryption-app\backend\index.js:112:20
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (D:\kp\krb\aes-encryption-app\backend\node_modules\express\lib\router\index.js:280:10)
+    at D:\kp\krb\aes-encryption-app\backend\node_modules\body-parser\lib\read.js:137:5

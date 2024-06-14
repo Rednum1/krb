@@ -5,6 +5,7 @@ import AboutPage from './components/AboutPage';
 import AESPage from './components/AESPage';
 import RSAPage from './components/RSAPage';
 import ResultsPage from './components/ResultsPage';
+import './App.css'; // Імпортуємо файл стилів
 
 function App() {
   return (
@@ -14,9 +15,7 @@ function App() {
           <li>
             <Link to="/">Home</Link>
           </li>
-          <li>
-            <Link to="/about">About Us</Link>
-          </li>
+
           <li>
             <Link to="/aes">AES Algorithm</Link>
           </li>
@@ -28,13 +27,15 @@ function App() {
           </li>
         </ul>
       </nav>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/aes" element={<AESPage />} />
-        <Route path="/rsa" element={<RSAPage />} />
-        <Route path="/results" element={<ResultsPage />} />
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/aes" element={<AESPage />} />
+          <Route path="/rsa" element={<RSAPage />} />
+          <Route path="/results" element={<ResultsPage />} />
+        </Routes>
+      </main>
     </Router>
   );
 }
