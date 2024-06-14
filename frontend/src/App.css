@@ -38,13 +38,61 @@
 }
 
 input {
-  margin: 10px;
+
   padding: 10px;
   font-size: 16px;
 }
 
 button {
-  margin: 10px;
+
   padding: 10px;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: rgb(153, 41, 41);
+  border-radius: 10px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.5s;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background-color: #3f4450;
+  padding: 1rem;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.5s;
+}
+
+nav ul li a:hover, button:hover {
+  background-color: #dd4545;
+}
+
+main {
+  padding: 2rem;
 }

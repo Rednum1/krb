@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './RSAPage.css';
 
 const RSAPage = () => {
     const [rsaText, setRsaText] = useState('');
@@ -57,11 +58,11 @@ const RSAPage = () => {
     };
 
     return (
-        <div>
+        <div className="rsa-container">
             <h1>RSA Encryption</h1>
             <div>
                 <label>Key Size: </label>
-                <select value={keySize} onChange={(e) => setKeySize(parseInt(e.target.value))}>
+                <select className="scontainer" value={keySize} onChange={(e) => setKeySize(parseInt(e.target.value))}>
                     <option value="1024">1024</option>
                     <option value="2048">2048</option>
                     <option value="4096">4096</option>
@@ -70,27 +71,27 @@ const RSAPage = () => {
             <button onClick={generateKeys}>Generate RSA Keys</button>
             <div>
                 <h2>Public Key</h2>
-                <textarea value={publicKey} readOnly />
+                <textarea className="container" value={publicKey} readOnly />
             </div>
             <div>
                 <h2>Private Key</h2>
-                <textarea value={privateKey} readOnly />
+                <textarea className="container" value={privateKey} readOnly />
             </div>
             <div>
                 <label>Cipher Type: </label>
-                <select value={cipherType} onChange={(e) => setCipherType(e.target.value)}>
+                <select className="scontainer" value={cipherType} onChange={(e) => setCipherType(e.target.value)}>
                     <option value="OAEP">OAEP</option>
                     <option value="PKCS1">PKCS1</option>
                     <option value="RSA">RSA</option>
                 </select>
             </div>
-            <input
+            <input className="container"
                 type="text"
                 value={rsaText}
                 onChange={(e) => setRsaText(e.target.value)}
                 placeholder="Enter text to encrypt"
             />
-            <button onClick={encryptRsa}>Encrypt</button>
+            <p><button onClick={encryptRsa}>Encrypt</button></p>
             <div>
                 <h2>Encrypted Text</h2>
                 <p>{encryptedRsaText}</p>
@@ -101,23 +102,23 @@ const RSAPage = () => {
                 <h2>Decrypt</h2>
                 <div>
                 <label>Cipher Type: </label>
-                <select value={cipherType} onChange={(e) => setCipherType(e.target.value)}>
+                <select className="scontainer" value={cipherType} onChange={(e) => setCipherType(e.target.value)}>
                     <option value="OAEP">OAEP</option>
                     <option value="PKCS1">PKCS1</option>
                     <option value="RSA">RSA</option>
                 </select>
             </div>
-                <textarea
+                <textarea className="container"
                     value={privateKey}
                     onChange={(e) => setPrivateKey(e.target.value)}
                     placeholder="Enter private key"
                 />
-                <textarea
+                <textarea className="container"
                     value={encryptedRsaText}
                     onChange={(e) => setEncryptedRsaText(e.target.value)}
                     placeholder="Enter encrypted text"
                 />
-                <button onClick={decryptRsa}>Decrypt</button>
+               <p> <button onClick={decryptRsa}>Decrypt</button></p>
             </div>
             <div>
                 <h2>Decrypted Text</h2>

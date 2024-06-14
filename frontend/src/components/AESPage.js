@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './AESPage.css';
 
 const AESPage = () => {
     const [aesText, setAesText] = useState('');
@@ -101,110 +102,130 @@ const AESPage = () => {
     };
 
     return (
-        <div>
+        <div className="aes-container">
             <h1>AES Encryption</h1>
-            <div>
+            <div className="section">
                 <h2>Encrypt</h2>
-                <input
-                    type="text"
+                <textarea
+                    className="textarea"
                     value={aesText}
                     onChange={(e) => setAesText(e.target.value)}
                     placeholder="Enter text to encrypt"
                 />
-                <input
-                    type="text"
-                    value={aesKey}
-                    onChange={(e) => setAesKey(e.target.value)}
-                    placeholder="Enter encryption key"
-                />
-                <select value={aesKeySize} onChange={(e) => setAesKeySize(parseInt(e.target.value))}>
-                    <option value={128}>128</option>
-                    <option value={192}>192</option>
-                    <option value={256}>256</option>
-                </select>
-                <button onClick={generateKey}>Generate Key</button>
-                <select value={aesMode} onChange={(e) => setAesMode(e.target.value)}>
-                    <option value="ECB">ECB</option>
-                    <option value="CBC">CBC</option>
-                    <option value="CFB">CFB</option>
-                </select>
-                {(aesMode === 'CBC' || aesMode === 'CFB') && (
-                    <input
+                <div className="input-group">
+                    <input className="container"
                         type="text"
-                        value={aesIV}
-                        onChange={(e) => setAesIV(e.target.value)}
-                        placeholder="Enter IV (32 hex characters)"
+                        value={aesKey}
+                        onChange={(e) => setAesKey(e.target.value)}
+                        placeholder="Enter encryption key"
                     />
-                )}
-                <div>
-                    <label>
-                        <input
-                            type="radio"
-                            value="base64"
-                            checked={aesOutputFormat === 'base64'}
-                            onChange={(e) => setAesOutputFormat(e.target.value)}
-                        />
-                        Base64
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            value="hex"
-                            checked={aesOutputFormat === 'hex'}
-                            onChange={(e) => setAesOutputFormat(e.target.value)}
-                        />
-                        Hex
-                    </label>
+                    <select className="scontainer" value={aesKeySize} onChange={(e) => setAesKeySize(parseInt(e.target.value))}>
+                        <option value={128}>128</option>
+                        <option value={192}>192</option>
+                        <option value={256}>256</option>
+                    </select>
+                    <button onClick={generateKey}>Generate Key</button>
                 </div>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button onClick={encryptAes}>Encrypt</button>
-                <button onClick={() => copyToClipboard(encryptedAesText)}>Copy Encrypted Text</button>
-                <div>
+                <div className="input-group">
+                    {(aesMode === 'CBC' || aesMode === 'CFB') && (
+                        <input className="container"
+                            type="text"
+                            value={aesIV}
+                            onChange={(e) => setAesIV(e.target.value)}
+                            placeholder="Enter IV (32 hex characters)"
+                        />
+                    )}
+                    <select className="scontainer" value={aesMode} onChange={(e) => setAesMode(e.target.value)}>
+                        <option value="ECB">ECB</option>
+                        <option value="CBC">CBC</option>
+                        <option value="CFB">CFB</option>
+                    </select>
+                    <div>
+                        <label>
+                            <input
+                                type="radio"
+                                value="base64"
+                                checked={aesOutputFormat === 'base64'}
+                                onChange={(e) => setAesOutputFormat(e.target.value)}
+                            />
+                            Base64
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                value="hex"
+                                checked={aesOutputFormat === 'hex'}
+                                onChange={(e) => setAesOutputFormat(e.target.value)}
+                            />
+                            Hex
+                        </label>
+                    </div>
+                </div>
+                {error && <p className="error">{error}</p>}
+                <div className="button-group">
+                    <button onClick={encryptAes}>Encrypt</button>
+                    <button onClick={() => copyToClipboard(encryptedAesText)}>Copy Encrypted Text</button>
+                </div>
+                <div className="result-section">
                     <h2>Encrypted Text</h2>
-                    <p>{encryptedAesText}</p>
+                    <textarea
+                        className="textarea"
+                        value={encryptedAesText}
+                        readOnly
+                    />
                     <p>Encryption Time: {encryptionTime !== null ? `${encryptionTime} seconds` : ''}</p>
                     <p>Memory Used: {encryptionMemoryUsed !== null ? `${encryptionMemoryUsed} MB` : ''}</p>
                 </div>
                 {copyMessage && <p>{copyMessage}</p>}
             </div>
-            <div>
+            <div className="section">
                 <h2>Decrypt</h2>
-                <input
-                    type="text"
+                <textarea
+                    className="textarea"
                     value={decryptAesText}
                     onChange={(e) => setDecryptAesText(e.target.value)}
                     placeholder="Enter encrypted text"
                 />
-                <input
-                    type="text"
-                    value={decryptAesKey}
-                    onChange={(e) => setDecryptAesKey(e.target.value)}
-                    placeholder="Enter decryption key"
-                />
-                <select value={decryptAesKeySize} onChange={(e) => setDecryptAesKeySize(parseInt(e.target.value))}>
-                    <option value={128}>128</option>
-                    <option value={192}>192</option>
-                    <option value={256}>256</option>
-                </select>
-                <select value={decryptAesMode} onChange={(e) => setDecryptAesMode(e.target.value)}>
-                    <option value="ECB">ECB</option>
-                    <option value="CBC">CBC</option>
-                    <option value="CFB">CFB</option>
-                </select>
-                {(decryptAesMode === 'CBC' || decryptAesMode === 'CFB') && (
-                    <input
+                <div className="input-group">
+                    <input className="container"
                         type="text"
-                        value={decryptAesIV}
-                        onChange={(e) => setDecryptAesIV(e.target.value)}
-                        placeholder="Enter IV (32 hex characters)"
+                        value={decryptAesKey}
+                        onChange={(e) => setDecryptAesKey(e.target.value)}
+                        placeholder="Enter decryption key"
                     />
-                )}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button onClick={decryptAes}>Decrypt</button>
-                <button onClick={() => copyToClipboard(decryptedAesText)}>Copy Decrypted Text</button>
-                <div>
+                    <select className="scontainer" value={decryptAesKeySize} onChange={(e) => setDecryptAesKeySize(parseInt(e.target.value))}>
+                        <option value={128}>128</option>
+                        <option value={192}>192</option>
+                        <option value={256}>256</option>
+                    </select>
+                </div>
+                <div className="input-group">
+                    {(decryptAesMode === 'CBC' || decryptAesMode === 'CFB') && (
+                        <input className="container"
+                            type="text"
+                            value={decryptAesIV}
+                            onChange={(e) => setDecryptAesIV(e.target.value)}
+                            placeholder="Enter IV (32 hex characters)"
+                        />
+                    )}
+                    <select className="scontainer" value={decryptAesMode} onChange={(e) => setDecryptAesMode(e.target.value)}>
+                        <option value="ECB">ECB</option>
+                        <option value="CBC">CBC</option>
+                        <option value="CFB">CFB</option>
+                    </select>
+                </div>
+                {error && <p className="error">{error}</p>}
+                <div className="button-group">
+                    <button onClick={decryptAes}>Decrypt</button>
+                    <button onClick={() => copyToClipboard(decryptedAesText)}>Copy Decrypted Text</button>
+                </div>
+                <div className="result-section">
                     <h2>Decrypted Text</h2>
-                    <p>{decryptedAesText}</p>
+                    <textarea
+                        className="textarea"
+                        value={decryptedAesText}
+                        readOnly
+                    />
                     <p>Decryption Time: {decryptionTime !== null ? `${decryptionTime} seconds` : ''}</p>
                     <p>Memory Used: {decryptionMemoryUsed !== null ? `${decryptionMemoryUsed} MB` : ''}</p>
                 </div>

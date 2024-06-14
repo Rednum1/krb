@@ -2,8 +2,7 @@
     padding: 20px;
 }
 
-h1 {
-    text-align: center;
+h1 {    
     margin-bottom: 20px;
 }
 
@@ -26,7 +25,7 @@ h2 {
     word-wrap: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px; /* Встановлює максимальну ширину для колонок */
+    max-width: 200px; 
     white-space: nowrap;
 }
 

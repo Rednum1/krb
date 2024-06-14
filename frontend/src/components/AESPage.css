@@ -1,0 +1,71 @@
+.aes-container {
+    padding-left: 25%;
+    resize: vertical;
+}
+
+.container {
+    width: 50%;
+    padding: 1%;
+    margin-top: 1%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border: none;
+    background-color: rgb(211, 208, 208);
+}
+
+.scontainer{
+    padding: 1%;
+    margin-right: 2%;
+    border: none;
+    background-color: rgb(211, 208, 208);
+    border-left: 2px solid rgb(0, 0, 0);
+    width: 6%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+.scoctainer{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px; 
+}
+.section {
+    margin-bottom: 20px;
+}
+
+.textarea {
+    width: 70%;
+    height: 100px;
+    background-color: rgb(212, 212, 212);
+    border-radius: 10px;
+    border: none;
+    font-size: 14pt;
+}
+
+.input-group {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    
+}
+
+.input-group select, .input-group input, .input-group button {
+    flex: 1;
+    
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+
+}
+
+.result-section {
+    margin-bottom: 20px;
+}
+
+.error {
+    color: red;
+    font-size: 14pt;
+}
